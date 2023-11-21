@@ -50,3 +50,43 @@ FROM dbo.Seattle_cycles_trip
 -- 19.632221265709
 
 --8) From which station did the largest number of individual trips begin?
+SELECT *
+FROM dbo.Seattle_cycles_trip
+
+SELECT TOP 1
+	from_station_name,
+	from_station_id,
+	COUNT(DISTINCT trip_id) AS trip_count
+FROM dbo.Seattle_cycles_trip
+GROUP BY from_station_id, from_station_name
+ORDER BY trip_count DESC
+ --Pier 69 / Alaskan Way & Clay St WF-01 16538
+
+--9) how many male members of the cycle hire scheme made trips in 2015?
+
+/*
+SELECT COUNT(bikeid), COUNT(*), gender
+FROM dbo.Seattle_cycles_trip
+WHERE gender = 'Male'
+GROUP BY gender
+*/
+
+SELECT COUNT(DISTINCT bikeid) AS male_members_with_trips
+FROM dbo.Seattle_cycles_trip
+WHERE gender = 'Male' AND YEAR(starttime) = 2015;
+-- answer 469
+
+--10) How many rows do not have nulls for the column birthyear?
+SELECT 
+	COUNT(birthyear)
+FROM dbo.Seattle_cycles_trip
+WHERE birthyear IS NOT NULL
+-- 237378
+
+--11) How old was the youngest rider that we know about?
+SELECT YEAR(GETDATE()) - MAX(birthyear) AS youngest_rider_age
+FROM dbo.Seattle_cycles_trip
+WHERE birthyear IS NOT NULL AND bikeid IS NOT NULL
+-- year 1999 and age 24
+
+--12) How many total trips started and ended at the same time
