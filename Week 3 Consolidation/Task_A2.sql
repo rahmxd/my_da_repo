@@ -71,17 +71,16 @@ WHERE gender = 'Male'
 GROUP BY gender
 */
 
-SELECT COUNT(DISTINCT bikeid) AS male_members_with_trips
+SELECT COUNT(*) AS male_members_with_trips
 FROM dbo.Seattle_cycles_trip
 WHERE gender = 'Male' AND YEAR(starttime) = 2015;
--- answer 469
+-- answer 481
 
 --10) How many rows do not have nulls for the column birthyear?
-SELECT 
-	COUNT(birthyear)
+SELECT COUNT(birthyear)
 FROM dbo.Seattle_cycles_trip
 WHERE birthyear IS NOT NULL
--- 237378
+-- 181553
 
 --11) How old was the youngest rider that we know about?
 SELECT YEAR(GETDATE()) - MAX(birthyear) AS youngest_rider_age
@@ -90,3 +89,33 @@ WHERE birthyear IS NOT NULL AND bikeid IS NOT NULL
 -- year 1999 and age 24
 
 --12) How many total trips started and ended at the same time
+SELECT COUNT(*) AS total_trips
+FROM dbo.Seattle_cycles_trip
+WHERE from_station_name = to_station_name
+--total trips = 23091
+
+--13) How many unique bikes were rented per year by short term pass holders
+SELECT usertype, COUNT(*) AS total, COUNT(DISTINCT bikeid) as bikes
+FROM dbo.Seattle_cycles_trip
+WHERE usertype = 'Short-Term Pass Holder'
+GROUP BY usertype
+-- 493
+
+--14) What is the earliest and latest dates we have in the Seattle_weather_conditions table?
+SELECT MIN(Date) AS earliest, MAX(Date) AS latest
+FROM dbo.Seattle_weather_conditions
+
+--15) Calculate the difference in temperature on each day between the maximum (F) and minimum (F)
+-- then sort your results to discover on which date(s) this difference was largest
+-- Hint: use operator - , assign an alias, ORDER BY
+
+SELECT (Max_Temperature_F-Min_TemperatureF) AS Daily_Temperature_Difference, Date
+FROM dbo.Seattle_weather_conditions
+ORDER BY Daily_Temperature_Difference DESC
+-- largest difference 69 on 2016-08-19
+
+--16) Summarise the average humidity per month (all years)
+
+
+
+
