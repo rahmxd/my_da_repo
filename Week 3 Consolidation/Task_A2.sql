@@ -115,6 +115,36 @@ ORDER BY Daily_Temperature_Difference DESC
 -- largest difference 69 on 2016-08-19
 
 --16) Summarise the average humidity per month (all years)
+-- use an aggregate with GROUP BY
+SELECT
+	FORMAT(Date, 'yyyy-MM') AS Month,
+	AVG(Mean_Humidity) AS Average_humidity
+FROM dbo.Seattle_weather_conditions
+GROUP BY FORMAT(Date, 'yyyy-MM')
+ORDER by month
+
+--17) Which month(s) in 2015 saw the highest max windspeed(not gusts) recorded?
+
+SELECT TOP 1
+	FORMAT(Date, 'yyyy-MM') AS Month,
+	MAX(Max_Wind_Speed_MPH) AS Highest_Max_Windspeed_MPG
+FROM dbo.Seattle_weather_conditions
+GROUP BY FORMAT(Date, 'yyyy-MM')
+ORDER by Highest_Max_Windspeed_MPG DESC
+-- 2015-12 Highest Max windspeed was 30MPG
+
+--18) On how many days were any weather events other than simply rain (storm, snow, fog, etc) recorded?
+SELECT COUNT(*)
+FROM dbo.Seattle_weather_conditions
+WHERE Events IS NULL OR Events NOT LIKE 'Rain'
+--402
+
+--19) What was the total rainfall accumulation (inches) during the first 3 months of 2016?
+SELECT *
+FROM 
+
+--20) On how many individual dates was fog reported?
+
 
 
 
