@@ -47,12 +47,9 @@ FROM dbo.Seattle_cycles_trip
 --7) What is the average trip duration in minutes?
 SELECT AVG(tripduration / 60) AS average_tripduration_mins
 FROM dbo.Seattle_cycles_trip
--- 19.632221265709
+-- 19.6388577044686
 
 --8) From which station did the largest number of individual trips begin?
-SELECT *
-FROM dbo.Seattle_cycles_trip
-
 SELECT TOP 1
 	from_station_name,
 	from_station_id,
@@ -74,7 +71,7 @@ GROUP BY gender
 SELECT COUNT(*) AS male_members_with_trips
 FROM dbo.Seattle_cycles_trip
 WHERE gender = 'Male' AND YEAR(starttime) = 2015;
--- answer 481
+-- answer 84908
 
 --10) How many rows do not have nulls for the column birthyear?
 SELECT COUNT(birthyear)
@@ -95,11 +92,13 @@ WHERE from_station_name = to_station_name
 --total trips = 23091
 
 --13) How many unique bikes were rented per year by short term pass holders
+-- need to include per year
 SELECT usertype, COUNT(*) AS total, COUNT(DISTINCT bikeid) as bikes
 FROM dbo.Seattle_cycles_trip
 WHERE usertype = 'Short-Term Pass Holder'
 GROUP BY usertype
 -- 493
+-- target answers for respective years 474, 479 and 459 ******
 
 --14) What is the earliest and latest dates we have in the Seattle_weather_conditions table?
 SELECT MIN(Date) AS earliest, MAX(Date) AS latest
@@ -131,21 +130,27 @@ SELECT TOP 1
 FROM dbo.Seattle_weather_conditions
 GROUP BY FORMAT(Date, 'yyyy-MM')
 ORDER by Highest_Max_Windspeed_MPG DESC
--- 2015-12 Highest Max windspeed was 30MPG
+-- 2015-12 Highest Max windspeed was 30MPh
 
 --18) On how many days were any weather events other than simply rain (storm, snow, fog, etc) recorded?
-SELECT COUNT(*)
+SELECT COUNT(*) AS No_Days_without_Simply_Rain
 FROM dbo.Seattle_weather_conditions
-WHERE Events IS NULL OR Events NOT LIKE 'Rain'
---402
+WHERE Events NOT LIKE 'Rain'
+--WHERE Events IS NULL OR Events NOT LIKE 'Rain'
+--41 days
 
 --19) What was the total rainfall accumulation (inches) during the first 3 months of 2016?
-SELECT *
-FROM 
+SELECT SUM(Precipitation_In) AS Quarterly_Total_Rainfall_Inches
+FROM dbo.Seattle_weather_conditions
+WHERE FORMAT(Date, 'yyyy-MM') BETWEEN '2016-01' AND '2016-03'
+-- answer 17.2799999378622
 
 --20) On how many individual dates was fog reported?
-
-
+--include Dates as a report to
+SELECT COUNT(DISTINCT Date) AS Number_Of_Dates_With_Fog
+FROM dbo.Seattle_weather_conditions
+WHERE Events LIKE '%Fog%'
+-- 29
 
 
 
